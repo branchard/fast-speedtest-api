@@ -33,4 +33,4 @@ class Timer {
     }
 }
 
-module.exports.default = Timer;
+module.exports = Timer;

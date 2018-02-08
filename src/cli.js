@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const Api = require("./Api").default;
+const Api = require("./Api");
 
 let args = process.argv.slice(2);
 let token = args[0];

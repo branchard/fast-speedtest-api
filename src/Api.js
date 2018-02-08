@@ -1,5 +1,5 @@
 const https = require("https");
-const Timer = require("./Timer").default;
+const Timer = require("./Timer");
 
 const DEFAULT_SPEEDTEST_TIMEOUT = 5000; // ms
 
@@ -108,4 +108,4 @@ class Api {
     }
 }
 
-module.exports.default = Api;
+module.exports = Api;
