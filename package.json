@@ -1,10 +1,13 @@
 {
   "name": "fast-speedtest",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "A speed test powered by fast.com",
+  "main": "./src/Api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "speedtest": "./src/cli.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +18,17 @@
   "bugs": {
     "url": "https://github.com/branchard/fast-speedtest/issues"
   },
-  "homepage": "https://github.com/branchard/fast-speedtest#readme"
+  "homepage": "https://github.com/branchard/fast-speedtest#readme",
+  "keywords": [
+    "speedtest",
+    "speed",
+    "network",
+    "test",
+    "fast",
+    "bandwidth",
+    "kbps",
+    "mbps",
+    "fast.com",
+    "netflix"
+  ]
 }
