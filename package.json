@@ -1,5 +1,5 @@
 {
-  "name": "fast-speedtest",
+  "name": "fast-speedtest-api",
   "version": "0.0.1",
   "description": "A speed test powered by fast.com",
   "main": "./src/Api.js",
