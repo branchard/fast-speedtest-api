@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/branchard/fast-speedtest.git"
+    "url": "git+https://github.com/branchard/fast-speedtest-api.git"
   },
   "author": "branchard",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/branchard/fast-speedtest/issues"
+    "url": "https://github.com/branchard/fast-speedtest-api/issues"
   },
-  "homepage": "https://github.com/branchard/fast-speedtest#readme",
+  "homepage": "https://github.com/branchard/fast-speedtest-api#readme",
   "keywords": [
     "speedtest",
     "speed",
