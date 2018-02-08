@@ -7,7 +7,7 @@ $ npm install --save fast-speedtest-api
 
 ## Command-Line Tool
 ```bash
-$ npm install --global fast-speedtest
+$ npm install --global fast-speedtest-api
 $ fast-speedtest [your-app-token] (-v)
 ```
 
