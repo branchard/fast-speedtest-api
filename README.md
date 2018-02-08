@@ -2,7 +2,7 @@
 
 ## Installation
 ```bash
-$ npm install --save fast-speedtest
+$ npm install --save fast-speedtest-api
 ```
 
 ## Command-Line Tool
@@ -14,7 +14,7 @@ $ fast-speedtest <your-app-token> (-v)
 ## Api usage
 Example:
 ```js
-const FastSpeedtest = require("fast-speedtest");
+const FastSpeedtest = require("fast-speedtest-api");
 
 let speedtest = new FastSpeedtest({
     token: "your-app-token",
