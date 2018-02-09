@@ -40,3 +40,4 @@ Go on [fast.com](https://fast.com/), open your browser devtools, go on `Network`
 - Better errors handling
 - More options in cli
 - Better verbose mode
+- Add tests
