@@ -1,4 +1,5 @@
 # fast.com API / CLI tool
+From scratch, with no dependencies
 
 ## Installation
 ```bash
@@ -17,13 +18,25 @@ Example:
 const FastSpeedtest = require("fast-speedtest-api");
 
 let speedtest = new FastSpeedtest({
-    token: "your-app-token",
-    verbose: false,
-    timeout: 10000
+    token: "your-app-token", // required
+    verbose: false, // default: false
+    timeout: 10000, // default: 5000
+    https: true, // default: true
+    urlCount: 5, // default: 5
+    bufferSize: 8 // default: 8
 });
 
 speedtest.getSpeed().then(s => {
-    console.log(`Speed: ${s / 1000000} mo/s`);
+    console.log(`Speed: ${s} bytes/s`);
+    console.log(`Speed: ${s / 1000000} megabytes/s`);
 });
-
 ```
+
+## FAQ
+### How to get app token ?
+Go on [fast.com](https://fast.com/), open your browser devtools, go on `Network` tab and copy the token on the request url that looks like `https://api.fast.com/netflix/speedtest?https=true&token=<the-token>&urlCount=5`
+
+## TODO
+- Better errors handling
+- More options in cli
+- Better verbose mode

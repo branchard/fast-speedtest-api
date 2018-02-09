@@ -13,10 +13,12 @@ class Api {
             throw "You must define app token";
         }
 
-        this.verbose = options.verbose || false;
-
         this.token = options.token;
+        this.verbose = options.verbose || false;
         this.timeout = options.timeout || DEFAULT_SPEEDTEST_TIMEOUT;
+        this.https = options.https || true;
+        this.urlCount = options.urlCount || 5;
+        this.bufferSize = options.bufferSize || 8;
     }
 
     static average(arr){
@@ -54,10 +56,15 @@ class Api {
     }
 
     async getTargets() {
-        let {response} = await this.get(`https://api.fast.com/netflix/speedtest?https=true&token=${this.token}`);
+        let {response} = await this.get(`http${this.https ? 's' : ''}://api.fast.com/netflix/speedtest?https=${this.https ? 'true' : 'false'}&token=${this.token}&urlCount=${this.urlCount}`);
         return response.data
     }
 
+    /**
+     * Resolves when timeout or whane the first video finished downloading
+     *
+     * @returns {Promise} Speed in bytes per second
+     */
     async getSpeed() {
         let targets = (await this.getTargets()).map(target => {
             return target.url;
@@ -87,7 +94,7 @@ class Api {
 
         return new Promise(resolve => {
             let i = 0;
-            const recents = [0, 0, 0, 0, 0, 0, 0, 0]; // list of most recent speeds
+            const recents = new Array(this.bufferSize).fill(0); // list of most recent speeds
             const interval = 200; // ms
             let refreshIntervalId = setInterval(() => {
                 if (done) {
@@ -98,7 +105,7 @@ class Api {
                     recents[i] = bytes / (interval / 1000); // add most recent bytes/second
 
                     if(this.verbose){
-                        console.log(`Speed: ${recents[i] / 1000000} mo/s`);
+                        console.log(`Speed: ${recents[i] / 1000000} megabytes/s`);
                     }
 
                     bytes = 0;// reset byte count
