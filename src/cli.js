@@ -16,5 +16,5 @@ let api = new Api({
 });
 
 api.getSpeed().then(s => {
-    console.log(`Speed: ${s / 1000000} mo/s`);
+    console.log(`Speed: ${s / 1000000} megabytes/s`);
 });
