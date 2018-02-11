@@ -1,12 +1,17 @@
 class Timer {
     // delay in ms
     constructor(callback, delay){
-        this.callback = callback;
+        this.callbacks = [callback];
         this.delay = delay;
         this.remaining = delay;
         this.startTime = null;
         this.timerId = null;
+		this.started = false;
     }
+
+	addCallback(callback){
+		this.callbacks.push(callback);
+	}
 
     start(){
         this.resume();
@@ -15,7 +20,8 @@ class Timer {
     resume(){
         this.startTime = new Date();
         clearTimeout(this.timerId);
-        this.timerId = setTimeout(this.callback, this.remaining);
+        this.timerId = setTimeout(this.stop.bind(this), this.remaining);
+		this.started = true;
     }
 
     pause(){
@@ -25,11 +31,13 @@ class Timer {
 
     stop(){
         this.clear();
+		this.callbacks.forEach(callback => callback());
     }
 
     clear(){
         clearTimeout(this.timerId);
         this.remaining = this.delay;
+		this.started = false;
     }
 }
 

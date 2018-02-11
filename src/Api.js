@@ -22,7 +22,11 @@ class Api {
     }
 
     static average(arr){
-        arr = arr.filter((e) => e > 0);
+		// remove nulls from list
+        arr = arr.filter(e => e);
+		if(arr.length == 0){
+			return 0;
+		}
         return arr.reduce((a, b) => a + b) / arr.length;
     }
 
@@ -71,12 +75,10 @@ class Api {
         });
 
         let bytes = 0;
-        let done = false;
         let requestList = [];
 
         let timer = new Timer(() => {
             requestList.forEach(r => r.abort());
-            done = true
         }, this.timeout);
 
         targets.forEach(async target => {
@@ -84,33 +86,32 @@ class Api {
             requestList.push(request);
             response.on('data', data => bytes += data.length);
             response.on('end', () => {
-                timer.stop();
-                requestList.forEach(r => r.abort());
-                done = true;
+				// when first video is downloaded
+                timer.stop(); // stop timer and execute timer callback
             });
         });
 
-        timer.start();
-
         return new Promise(resolve => {
             let i = 0;
-            const recents = new Array(this.bufferSize).fill(0); // list of most recent speeds
+            const recents = new Array(this.bufferSize).fill(null); // list of most recent speeds
             const interval = 200; // ms
             let refreshIntervalId = setInterval(() => {
-                if (done) {
-                    clearInterval(refreshIntervalId);
-                    resolve(this.constructor.average(recents));
-                } else {
-                    i = (i + 1) % recents.length; // loop through recents
-                    recents[i] = bytes / (interval / 1000); // add most recent bytes/second
+                i = (i + 1) % recents.length; // loop through recents
+                recents[i] = bytes / (interval / 1000); // add most recent bytes/second
 
-                    if(this.verbose){
-                        console.log(`Speed: ${recents[i] / 1000000} megabytes/s`);
-                    }
-
-                    bytes = 0;// reset byte count
+                if(this.verbose){
+                    console.log(`Speed: ${recents[i] / 1000000} megabytes/s`);
                 }
+
+                bytes = 0;// reset bytes count
             }, interval);
+
+			timer.addCallback(() => {
+				clearInterval(refreshIntervalId);
+				resolve(this.constructor.average(recents));
+			});
+
+			timer.start();
         });
     }
 }
