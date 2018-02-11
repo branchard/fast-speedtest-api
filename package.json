@@ -4,7 +4,7 @@
   "description": "A speed test powered by fast.com",
   "main": "./src/Api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "bin": {
     "fast-speedtest": "./src/cli.js"
@@ -32,5 +32,9 @@
     "netflix",
     "api",
     "cli"
-  ]
+  ],
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.0.0"
+  }
 }
