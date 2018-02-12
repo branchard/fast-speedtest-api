@@ -1,9 +1,11 @@
-<img src="https://fast.com/assets/new-logo-vert-37861c.svg" alt="fast.com logo" height="120px">
+<a href="https://fast.com"><img src="https://fast.com/assets/new-logo-vert-37861c.svg" alt="fast.com logo" height="120px" /></a>
+
 # fast.com API / CLI tool
 [![Build Status](https://travis-ci.org/branchard/fast-speedtest-api.svg?branch=master)](https://travis-ci.org/branchard/fast-speedtest-api)
 [![NPM version](https://img.shields.io/npm/v/fast-speedtest-api.svg?colorB=0a7bbb)](https://www.npmjs.com/package/fast-speedtest-api)
 [![GitHub license](https://img.shields.io/github/license/branchard/fast-speedtest-api.svg?colorB=0a7bbb)](https://github.com/branchard/fast-speedtest-api/blob/master/LICENSE)
 
+A speed test powered by fast.com  
 From scratch, with no dependencies
 
 ## Installation
