@@ -1,3 +1,4 @@
+<img src="https://fast.com/assets/new-logo-vert-37861c.svg" alt="fast.com logo" height="120px">
 # fast.com API / CLI tool
 [![Build Status](https://travis-ci.org/branchard/fast-speedtest-api.svg?branch=master)](https://travis-ci.org/branchard/fast-speedtest-api)
 [![NPM version](https://img.shields.io/npm/v/fast-speedtest-api.svg?colorB=0a7bbb)](https://www.npmjs.com/package/fast-speedtest-api)
