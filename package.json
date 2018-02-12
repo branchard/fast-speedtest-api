@@ -3,6 +3,9 @@
   "version": "0.1.1",
   "description": "A speed test powered by fast.com",
   "main": "./src/Api.js",
+  "engines" : {
+	"node" : ">=7.10.1"
+  },
   "scripts": {
     "test": "mocha"
   },
