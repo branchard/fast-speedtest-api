@@ -1,4 +1,4 @@
-<img src="https://fast.com/assets/new-logo-vert-37861c.svg" alt="fast.com logo" height="120px" />
+<a href="https://fast.com"><img src="https://fast.com/assets/new-logo-vert-37861c.svg" alt="fast.com logo" height="120px" /></a>
 
 # fast.com API / CLI tool
 [![Build Status](https://travis-ci.org/branchard/fast-speedtest-api.svg?branch=master)](https://travis-ci.org/branchard/fast-speedtest-api)
