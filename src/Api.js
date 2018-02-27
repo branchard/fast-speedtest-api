@@ -1,4 +1,5 @@
 const https = require("https");
+const http = require("https");
 const Timer = require("./Timer");
 
 const DEFAULT_SPEEDTEST_TIMEOUT = 5000; // ms
@@ -31,8 +32,8 @@ class Api {
     }
 
     get(url){
-        return new Promise(resolve => {
-            let request = https.get(url, response => {
+        return new Promise((resolve, reject) => {
+            let request = (this.https ? https : http).get(url, response => {
                 if(response.headers["content-type"].includes('json')){
                     response.setEncoding('utf8');
                     let rawData = '';
