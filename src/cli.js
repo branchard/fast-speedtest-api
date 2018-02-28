@@ -13,10 +13,12 @@ let api = new Api({
     token: token,
     verbose: verbose,
     timeout: 10000,
-    urlCount: 10,
-    https: true
+    urlCount: 5,
+    bufferSize: 8,
+    https: true,
+    unit: Api.UNITS.Mbps
 });
 
 api.getSpeed().then(s => {
-    console.log(`Speed: ${s / 1000000} megabytes/s`);
+    console.log(`Speed: ${s} Mbps`);
 });

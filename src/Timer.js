@@ -30,14 +30,18 @@ class Timer {
     }
 
     stop(){
-        this.clear();
-		this.callbacks.forEach(callback => callback());
+        if(this.started){
+            this.clear();
+            this.callbacks.forEach(callback => callback());
+        }
     }
 
     clear(){
-        clearTimeout(this.timerId);
-        this.remaining = this.delay;
-		this.started = false;
+        if(this.started){
+            clearTimeout(this.timerId);
+            this.remaining = this.delay;
+    		this.started = false;
+        }
     }
 }
 

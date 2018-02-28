@@ -17,12 +17,17 @@ class Api {
             throw "You must define app token";
         }
 
+        if(options.unit && typeof options.unit !== "function"){
+            throw "Invalide unit";
+        }
+
         this.token = options.token;
         this.verbose = options.verbose || false;
         this.timeout = options.timeout || DEFAULT_SPEEDTEST_TIMEOUT;
         this.https = options.https == undefined ? true : Boolean(options.https);
         this.urlCount = options.urlCount || DEFAULT_URL_COUNT;
         this.bufferSize = options.bufferSize || DEFAULT_BUFFER_SIZE;
+        this.unit = options.unit || Api.UNITS.Bps;
     }
 
     static average(arr){
@@ -90,7 +95,7 @@ class Api {
     /**
      * Resolves when timeout or whane the first video finished downloading
      *
-     * @returns {Promise} Speed in bytes per second
+     * @returns {Promise} Speed in selected unit (Default: Bps)
      */
     async getSpeed() {
         let targets = await this.getTargets();
@@ -124,7 +129,7 @@ class Api {
                 recents[i] = bytes / (interval / 1000); // add most recent bytes/second
 
                 if(this.verbose){
-                    console.log(`Current speed: ${recents[i] / 1000000} megabytes/s`);
+                    console.log(`Current speed: ${this.unit(this.constructor.average(recents))} ${this.unit.name}`);
                 }
 
                 bytes = 0;// reset bytes count
@@ -132,12 +137,26 @@ class Api {
 
 			timer.addCallback(() => {
 				clearInterval(refreshIntervalId);
-				resolve(this.constructor.average(recents));
+				resolve(this.unit(this.constructor.average(recents)));
 			});
 
 			timer.start();
         });
     }
 }
+
+Api.UNITS = {
+    // rawSpeed is Bps
+    Bps:  rawSpeed => rawSpeed,
+    KBps: rawSpeed => rawSpeed / 1000,
+    MBps: rawSpeed => rawSpeed / 1000000,
+    GBps: rawSpeed => rawSpeed / 1000000000,
+
+    bps:  rawSpeed => rawSpeed * 8,
+    Kbps: rawSpeed => rawSpeed * 8 / 1000,
+    Mbps: rawSpeed => rawSpeed * 8 / 1000000,
+    Gbps: rawSpeed => rawSpeed * 8 / 1000000000,
+
+};
 
 module.exports = Api;
