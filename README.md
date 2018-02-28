@@ -31,11 +31,13 @@ let speedtest = new FastSpeedtest({
     https: true, // default: true
     urlCount: 5, // default: 5
     bufferSize: 8 // default: 8
+    unit: FastSpeedtest.UNITS.Mbps // default: Bps
 });
 
 speedtest.getSpeed().then(s => {
-    console.log(`Speed: ${s} bytes/s`);
-    console.log(`Speed: ${s / 1000000} megabytes/s`);
+    console.log(`Speed: ${s} Mbps`);
+}).catch(e => {
+    console.error(e.message);
 });
 ```
 
