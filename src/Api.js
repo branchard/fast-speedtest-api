@@ -1,5 +1,5 @@
 const https = require("https");
-const http = require("https");
+const http = require("http");
 const Timer = require("./Timer");
 
 const DEFAULT_SPEEDTEST_TIMEOUT = 5000; // ms
@@ -17,7 +17,7 @@ class Api {
         this.token = options.token;
         this.verbose = options.verbose || false;
         this.timeout = options.timeout || DEFAULT_SPEEDTEST_TIMEOUT;
-        this.https = options.https || true;
+        this.https = options.https == undefined ? true : Boolean(options.https);
         this.urlCount = options.urlCount || 5;
         this.bufferSize = options.bufferSize || 8;
     }
@@ -56,13 +56,32 @@ class Api {
                         request: request
                     });
                 }
+            }).on('error', function(e) {
+                reject(e);
             });
         });
     }
 
     async getTargets() {
-        let {response} = await this.get(`http${this.https ? 's' : ''}://api.fast.com/netflix/speedtest?https=${this.https ? 'true' : 'false'}&token=${this.token}&urlCount=${this.urlCount}`);
-        return response.data
+        try {
+            let targets = [];
+            while (targets.length < this.urlCount) {
+                let {response} = await this.get(`http${this.https ? 's' : ''}://api.fast.com/netflix/speedtest?https=${this.https ? 'true' : 'false'}&token=${this.token}&urlCount=${this.urlCount - targets.length}`);
+                targets.push(...response.data);
+            }
+            return targets.map(target => target.url);
+        } catch (e) {
+            if(e.code == 'ENOTFOUND'){
+                if(this.https){
+                    console.error('Fast api unreachable with https, try with http');
+                }else{
+                    console.error('Fast api unreachable, check your network connection');
+                }
+            }else {
+                console.error("Unknown error: ", e.message);
+            }
+            process.exit(1);
+        }
     }
 
     /**
@@ -71,9 +90,7 @@ class Api {
      * @returns {Promise} Speed in bytes per second
      */
     async getSpeed() {
-        let targets = (await this.getTargets()).map(target => {
-            return target.url;
-        });
+        let targets = await this.getTargets();
 
         let bytes = 0;
         let requestList = [];
@@ -101,7 +118,7 @@ class Api {
                 recents[i] = bytes / (interval / 1000); // add most recent bytes/second
 
                 if(this.verbose){
-                    console.log(`Speed: ${recents[i] / 1000000} megabytes/s`);
+                    console.log(`Current speed: ${recents[i] / 1000000} megabytes/s`);
                 }
 
                 bytes = 0;// reset bytes count

@@ -12,7 +12,9 @@ let verbose = args[1] == "-v";
 let api = new Api({
     token: token,
     verbose: verbose,
-    timeout: 10000
+    timeout: 10000,
+    urlCount: 10,
+    https: true
 });
 
 api.getSpeed().then(s => {
