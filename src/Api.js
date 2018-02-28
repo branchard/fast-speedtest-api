@@ -1,6 +1,7 @@
 const https = require("https");
 const http = require("http");
 const Timer = require("./Timer");
+const ApiError = require("./ApiError");
 
 const DEFAULT_SPEEDTEST_TIMEOUT = 5000; // ms
 const DEFAULT_URL_COUNT = 5;
@@ -75,20 +76,25 @@ class Api {
             let targets = [];
             while (targets.length < this.urlCount) {
                 let {response} = await this.get(`http${this.https ? 's' : ''}://api.fast.com/netflix/speedtest?https=${this.https ? 'true' : 'false'}&token=${this.token}&urlCount=${this.urlCount - targets.length}`);
+                if(response.statusCode != 200){
+                    if(response.statusCode == 403){
+                        throw new ApiError({code: ApiError.CODES.BAD_TOKEN});
+                    }
+                    throw new ApiError({code: ApiError.CODES.UNKNOWN});
+                }
                 targets.push(...response.data);
             }
             return targets.map(target => target.url);
         } catch (e) {
             if(e.code == 'ENOTFOUND'){
                 if(this.https){
-                    console.error('Fast api unreachable with https, try with http');
+                    throw new ApiError({code: ApiError.CODES.UNREACHABLE_HTTPS_API});
                 }else{
-                    console.error('Fast api unreachable, check your network connection');
+                    throw new ApiError({code: ApiError.CODES.UNREACHABLE_HTTP_API});
                 }
             }else {
-                console.error("Unknown error: ", e.message);
+                throw e;
             }
-            process.exit(1);
         }
     }
 
@@ -98,7 +104,12 @@ class Api {
      * @returns {Promise} Speed in selected unit (Default: Bps)
      */
     async getSpeed() {
-        let targets = await this.getTargets();
+        let targets = null;
+        try{
+            targets = await this.getTargets();
+        }catch(e){
+            throw e;
+        }
 
         let bytes = 0;
         let requestList = [];
