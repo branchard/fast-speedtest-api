@@ -44,7 +44,6 @@ speedtest.getSpeed().then(s => {
 Go on [fast.com](https://fast.com/), open your browser devtools, go on `Network` tab and copy the token on the request url that looks like `https://api.fast.com/netflix/speedtest?https=true&token=<the-token>&urlCount=5`
 
 ## TODO
-- Better errors handling
 - More options in cli
 - Better verbose mode
 - Add tests
