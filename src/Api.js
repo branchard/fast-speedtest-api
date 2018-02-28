@@ -156,7 +156,6 @@ Api.UNITS = {
     Kbps: rawSpeed => rawSpeed * 8 / 1000,
     Mbps: rawSpeed => rawSpeed * 8 / 1000000,
     Gbps: rawSpeed => rawSpeed * 8 / 1000000000,
-
 };
 
 module.exports = Api;
