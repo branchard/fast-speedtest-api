@@ -3,6 +3,9 @@ const http = require("http");
 const Timer = require("./Timer");
 
 const DEFAULT_SPEEDTEST_TIMEOUT = 5000; // ms
+const DEFAULT_URL_COUNT = 5;
+const DEFAULT_BUFFER_SIZE = 8;
+const MAX_CHECK_INTERVAL = 200; // ms
 
 class Api {
     constructor(options){
@@ -18,8 +21,8 @@ class Api {
         this.verbose = options.verbose || false;
         this.timeout = options.timeout || DEFAULT_SPEEDTEST_TIMEOUT;
         this.https = options.https == undefined ? true : Boolean(options.https);
-        this.urlCount = options.urlCount || 5;
-        this.bufferSize = options.bufferSize || 8;
+        this.urlCount = options.urlCount || DEFAULT_URL_COUNT;
+        this.bufferSize = options.bufferSize || DEFAULT_BUFFER_SIZE;
     }
 
     static average(arr){
@@ -112,7 +115,10 @@ class Api {
         return new Promise(resolve => {
             let i = 0;
             const recents = new Array(this.bufferSize).fill(null); // list of most recent speeds
-            const interval = 200; // ms
+            const interval = Math.min(
+                this.timeout / this.bufferSize,
+                MAX_CHECK_INTERVAL
+            ); // ms
             let refreshIntervalId = setInterval(() => {
                 i = (i + 1) % recents.length; // loop through recents
                 recents[i] = bytes / (interval / 1000); // add most recent bytes/second
