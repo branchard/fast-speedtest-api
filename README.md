@@ -48,6 +48,5 @@ Go on [fast.com](https://fast.com/), open your browser devtools, go on `Network`
 - More options in cli
 - Better verbose mode
 - Add tests
-- Add possibility to choice unit
 
 ## Feel free to contribute
