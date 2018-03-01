@@ -4,6 +4,15 @@ const Api = require("./Api");
 
 
 let args = process.argv.slice(2);
+
+if(args.includes('-h') || args.includes('--help')){
+    console.log([
+        'fast-speedtest - speed test powered by fast.com',
+        'usage: fast-speedtest token [-v, --verbose] [-n, --no-https] [-t, --timeout timeout] [-c, --count url-count] [-b, --buffer buffer-size] [-u, --unit output-unit]'
+    ].join('\n'));
+    process.exit(0);
+}
+
 let token = args[0];
 let restArgs = args.slice(1);
 
@@ -14,11 +23,6 @@ function getArgParam(argName, fullArgName){
         }
     }
     return undefined;
-}
-
-if(restArgs.includes('-h') || restArgs.includes('--help')){
-    console.log("print help");
-    process.exit(0);
 }
 
 if(!token || typeof token !== "string"){
