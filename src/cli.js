@@ -36,7 +36,7 @@ let timeout = getArgParam('-t', '--timeout');
 let urlCount = getArgParam('-c', '--count');
 let bufferSize = getArgParam('-b', '--buffer');
 let unitName = getArgParam('-u', '--unit');
-if(!(unitName in Api.UNITS)){
+if(unitName && !(unitName in Api.UNITS)){
     throw `Unit not valide, must be one of ${Object.keys(Api.UNITS)}`;
 }
 let unit = Api.UNITS[unitName] || Api.UNITS.Mbps;
