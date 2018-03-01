@@ -1,6 +1,6 @@
 {
   "name": "fast-speedtest-api",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A speed test powered by fast.com",
   "main": "./src/Api.js",
   "engines": {
