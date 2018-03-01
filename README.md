@@ -16,7 +16,9 @@ $ npm install --save fast-speedtest-api
 ## Command-Line Tool
 ```bash
 $ npm install --global fast-speedtest-api
-$ fast-speedtest [your-app-token] (-v)
+$ fast-speedtest --help
+    fast-speedtest - speed test powered by fast.com
+    usage: fast-speedtest token [-v, --verbose] [-n, --no-https] [-t, --timeout timeout] [-c, --count url-count] [-b, --buffer buffer-size] [-u, --unit output-unit]
 ```
 
 ## Api usage
@@ -46,7 +48,6 @@ speedtest.getSpeed().then(s => {
 Go on [fast.com](https://fast.com/), open your browser devtools, go on `Network` tab and copy the token on the request url that looks like `https://api.fast.com/netflix/speedtest?https=true&token=<the-token>&urlCount=5`
 
 ## TODO
-- More options in cli
 - Better verbose mode
 - Add tests
 
