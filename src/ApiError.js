@@ -1,4 +1,9 @@
 class ApiError extends Error{
+	/**
+	 * Create new ApiError
+	 *
+	 * @param  {object} options {code<One of ApiError.CODES>, message<string>}
+	 */
 	constructor(options){
 		if(options && options.code && Object.values(ApiError.CODES).indexOf(options.code) > -1){
 			const codeKey = Object.keys(ApiError.CODES).find(key => ApiError.CODES[key] === options.code);

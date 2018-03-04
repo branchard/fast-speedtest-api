@@ -16,6 +16,7 @@ if(args.includes('-h') || args.includes('--help')){
 const token = args[0];
 const restArgs = args.slice(1);
 
+/* eslint-disable require-jsdoc */
 function getArgParam(argName, fullArgName){
 	/* eslint-disable no-restricted-syntax */
 	for(const arg of [argName, fullArgName]){
@@ -26,6 +27,7 @@ function getArgParam(argName, fullArgName){
 	/* eslint-enable no-restricted-syntax */
 	return undefined;
 }
+/* eslint-enable require-jsdoc */
 
 if(!token || typeof token !== 'string'){
 	throw new Error('You must define an app token');

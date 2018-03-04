@@ -9,6 +9,12 @@ const DEFAULT_BUFFER_SIZE = 8;
 const MAX_CHECK_INTERVAL = 200; // ms
 
 class Api{
+	/**
+	 * Create an Api object
+	 *
+	 * @param {object} options {token<string>, [verbose<boolean>, timeout<number>,
+	 * https<boolean>, urlCount<number>, bufferSize<number>, unit<function>]}
+	 */
 	constructor(options){
 		if(!options){
 			throw new Error('You must define options in Api contructor');
@@ -31,6 +37,14 @@ class Api{
 		this.unit = options.unit || Api.UNITS.Bps;
 	}
 
+
+	/**
+	 * Compute average from array of number
+	 *
+	 * @static
+	 * @param {Array} arr array of number or null
+	 * @return {number} The average
+	 */
 	static average(arr){
 		// remove nulls from list
 		const arrWithoutNulls = arr.filter(e => e);
@@ -40,6 +54,14 @@ class Api{
 		return arrWithoutNulls.reduce((a, b) => a + b) / arrWithoutNulls.length;
 	}
 
+
+	/**
+	 * Get data from the specified URL
+	 *
+	 * @async
+	 * @param {string} url The URL to download from
+	 * @return {Promise} The request and response from the URL
+	 */
 	async get(url){
 		return new Promise((resolve, reject) => {
 			const request = (this.https ? https : http).get(url, (response) => {
@@ -67,6 +89,13 @@ class Api{
 		});
 	}
 
+
+	/**
+	 * Get videos to download url from Fast api
+	 *
+	 * @async
+	 * @return {Array<string>} List of videos url
+	 */
 	async getTargets(){
 		try{
 			const targets = [];
@@ -97,9 +126,9 @@ class Api{
 	}
 
 	/**
-	 * Resolves when timeout or whane the first video finished downloading
+	 * Resolves when timeout or when the first video finished downloading
 	 *
-	 * @returns {Promise} Speed in selected unit (Default: Bps)
+	 * @returns {Promise<number>} Speed in selected unit (Default: Bps)
 	 */
 	async getSpeed(){
 		let targets = null;
@@ -112,9 +141,9 @@ class Api{
 		let bytes = 0;
 		const requestList = [];
 
-		const timer = new Timer(() => {
+		const timer = new Timer(this.timeout, () => {
 			requestList.forEach(r => r.abort());
-		}, this.timeout);
+		});
 
 		targets.forEach(async (target) => {
 			const {response, request} = await this.get(target);

@@ -17,6 +17,16 @@
 		"space-before-blocks": ["error", "never"],
 		"object-curly-spacing": ["error", "never"],
 		"eqeqeq": "off",
-		"no-console": "off"
+		"no-console": "off",
+		"require-jsdoc": ["error", {
+	        "require": {
+	            "FunctionDeclaration": true,
+	            "MethodDefinition": true,
+	            "ClassDeclaration": false,
+	            "ArrowFunctionExpression": false,
+	            "FunctionExpression": false
+	        }
+	    }],
+		"valid-jsdoc": "error"
     }
 }
