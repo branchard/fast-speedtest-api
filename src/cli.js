@@ -60,7 +60,7 @@ api.getSpeed().then((s) => {
 	if(rawOutput){
 		console.log(s);
 	}else{
-		console.log(`Speed: ${s} ${unit.name}`);
+		console.log(`Speed: ${Math.round(s * 100) / 100} ${unit.name}`);
 	}
 }).catch((e) => {
 	console.error(e.message);
