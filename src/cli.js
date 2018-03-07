@@ -8,7 +8,7 @@ const args = process.argv.slice(2);
 if(args.includes('-h') || args.includes('--help')){
 	console.log([
 		'fast-speedtest - speed test powered by fast.com',
-		'usage: fast-speedtest token [-v, --verbose] [-n, --no-https] [-t, --timeout timeout] [-c, --count url-count] [-b, --buffer buffer-size] [-u, --unit output-unit]',
+		'usage: fast-speedtest token [-v, --verbose] [-r, --raw] [-n, --no-https] [-t, --timeout timeout] [-c, --count url-count] [-b, --buffer buffer-size] [-u, --unit output-unit]',
 	].join('\n'));
 	process.exit(0);
 }
@@ -35,6 +35,7 @@ if(!token || typeof token !== 'string'){
 
 const verbose = restArgs.includes('-v') || restArgs.includes('--verbose');
 const https = !restArgs.includes('-n') && !restArgs.includes('--no-https');
+const rawOutput = restArgs.includes('-r') || restArgs.includes('--raw');
 
 const timeout = getArgParam('-t', '--timeout');
 const urlCount = getArgParam('-c', '--count');
@@ -56,7 +57,11 @@ const api = new Api({
 });
 
 api.getSpeed().then((s) => {
-	console.log(`Speed: ${s} ${unit.name}`);
+	if(rawOutput){
+		console.log(s);
+	}else{
+		console.log(`Speed: ${s} ${unit.name}`);
+	}
 }).catch((e) => {
 	console.error(e.message);
 });
