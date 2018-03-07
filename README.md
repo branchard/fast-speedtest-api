@@ -19,7 +19,7 @@ $ npm install --save fast-speedtest-api
 $ npm install --global fast-speedtest-api
 $ fast-speedtest --help
     fast-speedtest - speed test powered by fast.com
-    usage: fast-speedtest token [-v, --verbose] [-n, --no-https] [-t, --timeout timeout] [-c, --count url-count] [-b, --buffer buffer-size] [-u, --unit output-unit]
+    usage: fast-speedtest token [-v, --verbose] [-r, --raw] [-n, --no-https] [-t, --timeout timeout] [-c, --count url-count] [-b, --buffer buffer-size] [-u, --unit output-unit]
 ```
 
 ## Api usage
