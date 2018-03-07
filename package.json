@@ -1,6 +1,6 @@
 {
   "name": "fast-speedtest-api",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A speed test powered by fast.com",
   "main": "./src/Api.js",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "mocha",
-	"release": "release-it"
+    "release": "release-it"
   },
   "bin": {
     "fast-speedtest": "./src/cli.js"
