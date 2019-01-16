@@ -6,6 +6,20 @@ class Timer {
    * @param  {function} [callback] The callback to call at the end of the timer
    */
   constructor(delay, callback) {
+    // check parameters
+    if (delay == null) {
+      throw new Error('delay parameter must be defined');
+    }
+
+    if (!Number.isInteger(delay)) {
+      throw new Error('delay parameter must be an integer');
+    }
+
+    if (callback && typeof callback !== 'function') {
+      throw new Error('callback parameter must be a function');
+    }
+
+    // set properties
     this.callbacks = callback ? [callback] : [];
     this.delay = delay;
     this.remaining = delay;
