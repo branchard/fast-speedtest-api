@@ -1,24 +1,9 @@
 {
     "extends": "airbnb-base",
     "rules": {
-		"indent": ["error", "tab"],
-		"no-tabs": "off",
-		"keyword-spacing": ["error", {
-			"before": false,
-      		"after": false,
-			"overrides": {
-        		"return": {"after": true},
-        		"const": {"after": true},
-        		"let": {"after": true},
-				"of": {"after": true},
-				"in": {"after": true}
-    		}
-		}],
-		"space-before-blocks": ["error", "never"],
-		"object-curly-spacing": ["error", "never"],
 		"eqeqeq": "off",
 		"no-console": "off",
-		"require-jsdoc": ["error", {
+		"require-jsdoc": ["warn", {
 	        "require": {
 	            "FunctionDeclaration": true,
 	            "MethodDefinition": true,
@@ -27,6 +12,6 @@
 	            "FunctionExpression": false
 	        }
 	    }],
-		"valid-jsdoc": "error"
+		"valid-jsdoc": "warn"
     }
 }
