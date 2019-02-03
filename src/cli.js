@@ -28,10 +28,14 @@ function getArgParam(argName, fullArgName) {
   return undefined;
 }
 
+function displayError(message) {
+  console.error(`Error: ${message}`);
+}
+
 /* eslint-enable require-jsdoc */
 
 if (!token || typeof token !== 'string') {
-  throw new Error('You must define an app token');
+  displayError('You must define an app token');
 }
 
 const verbose = restArgs.includes('-v') || restArgs.includes('--verbose');
@@ -43,7 +47,7 @@ const urlCount = getArgParam('-c', '--count');
 const bufferSize = getArgParam('-b', '--buffer');
 const unitName = getArgParam('-u', '--unit');
 if (unitName && !(unitName in Api.UNITS)) {
-  throw new Error(`Unit not valide, must be one of ${Object.keys(Api.UNITS)}`);
+  displayError(`Unit not valid, must be one of ${Object.keys(Api.UNITS)}`);
 }
 const unit = Api.UNITS[unitName] || Api.UNITS.Mbps;
 
@@ -57,12 +61,14 @@ const api = new Api({
   unit,
 });
 
-api.getSpeed().then((s) => {
-  if (rawOutput) {
-    console.log(s);
-  } else {
-    console.log(`Speed: ${Math.round(s * 100) / 100} ${unit.name}`);
-  }
-}).catch((e) => {
-  console.error(e.message);
-});
+api.getSpeed()
+  .then((s) => {
+    if (rawOutput) {
+      console.log(s);
+    } else {
+      console.log(`Speed: ${Math.round(s * 100) / 100} ${unit.name}`);
+    }
+  })
+  .catch((e) => {
+    displayError(e.message);
+  });
