@@ -28,7 +28,7 @@ Example:
 const FastSpeedtest = require("fast-speedtest-api");
 
 let speedtest = new FastSpeedtest({
-    token: "your-app-token", // required
+    token: "your-app-token", // required (see dedicated FAQ section to know how to get an app token)
     verbose: false, // default: false
     timeout: 10000, // default: 5000
     https: true, // default: true
