@@ -35,8 +35,11 @@ class Api {
     this.urlCount = options.urlCount || DEFAULT_URL_COUNT;
     this.bufferSize = options.bufferSize || DEFAULT_BUFFER_SIZE;
     this.unit = options.unit || Api.UNITS.Bps;
-  }
 
+    this.listeners = {
+      [Api.EVENTS.measure]: [],
+    };
+  }
 
   /**
    * Compute average from array of number
@@ -54,6 +57,13 @@ class Api {
     return arrWithoutNulls.reduce((a, b) => a + b) / arrWithoutNulls.length;
   }
 
+  addListener(eventType, callback) {
+    if (!Object.values(Api.EVENTS)
+      .includes(eventType)) {
+      throw new Error(`Invalid event name: "${eventType}"`);
+    }
+    this.listeners[eventType].push(callback);
+  }
 
   /**
    * Get data from the specified URL
@@ -85,12 +95,12 @@ class Api {
             request,
           });
         }
-      }).on('error', (e) => {
-        reject(e);
-      });
+      })
+        .on('error', (e) => {
+          reject(e);
+        });
     });
   }
-
 
   /**
    * Get videos to download url from Fast api
@@ -148,7 +158,7 @@ class Api {
     });
 
     targets.forEach(async (target) => {
-      const {response, request} = await this.get(target);
+      const { response, request } = await this.get(target);
       requestList.push(request);
       response.on('data', (data) => {
         bytes += data.length;
@@ -170,9 +180,14 @@ class Api {
         i = (i + 1) % recents.length; // loop through recents
         recents[i] = bytes / (interval / 1000); // add most recent bytes/second
 
+        const currentSpeed = this.unit(this.constructor.average(recents));
         if (this.verbose) {
-          console.log(`Current speed: ${this.unit(this.constructor.average(recents))} ${this.unit.name}`);
+          console.log(`Current speed: ${currentSpeed} ${this.unit.name}`);
         }
+
+        this.listeners[Api.EVENTS.measure].forEach((callback) => {
+          callback(currentSpeed);
+        });
 
         bytes = 0;// reset bytes count
       }, interval);
@@ -198,6 +213,10 @@ Api.UNITS = {
   Kbps: rawSpeed => (rawSpeed * 8) / 1000,
   Mbps: rawSpeed => (rawSpeed * 8) / 1000000,
   Gbps: rawSpeed => (rawSpeed * 8) / 1000000000,
+};
+
+Api.EVENTS = {
+  measure: 'measure',
 };
 
 module.exports = Api;
