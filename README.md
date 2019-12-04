@@ -19,7 +19,7 @@ $ npm install --save fast-speedtest-api
 $ npm install --global fast-speedtest-api
 $ fast-speedtest --help
     fast-speedtest - speed test powered by fast.com
-    usage: fast-speedtest token [-v, --verbose] [-r, --raw] [-n, --no-https] [-t, --timeout timeout] [-c, --count url-count] [-b, --buffer buffer-size] [-u, --unit output-unit]
+    usage: fast-speedtest [token] [-v, --verbose] [-r, --raw] [-n, --no-https] [-t, --timeout timeout] [-c, --count url-count] [-b, --buffer buffer-size] [-u, --unit output-unit]
 ```
 
 ## Api usage
@@ -28,7 +28,7 @@ Example:
 const FastSpeedtest = require("fast-speedtest-api");
 
 let speedtest = new FastSpeedtest({
-    token: "your-app-token", // required
+    token: null, // default: null
     verbose: false, // default: false
     timeout: 10000, // default: 5000
     https: true, // default: true
@@ -47,7 +47,7 @@ speedtest.getSpeed().then(s => {
 
 ## FAQ
 ### How to get app token ?
-Go on [fast.com](https://fast.com/), open your browser devtools, go on `Network` tab and copy the token on the request url that looks like `https://api.fast.com/netflix/speedtest?https=true&token=<the-token>&urlCount=5`
+Go on [fast.com](https://fast.com/), open your browser devtools, go on `Network` tab and copy the token on the request url that looks like `https://api.fast.com/netflix/speedtest?https=true&token=<the-token>&urlCount=5`. If no token is defined, then API try to parse token from speedtest website.
 
 ## TODO
 - Better verbose mode

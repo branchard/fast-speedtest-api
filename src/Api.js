@@ -5,6 +5,7 @@ const url = require('url');
 const Timer = require('./Timer');
 const ApiError = require('./ApiError');
 
+const BASE_URL = 'fast.com';
 const DEFAULT_SPEEDTEST_TIMEOUT = 5000; // ms
 const DEFAULT_URL_COUNT = 5;
 const DEFAULT_BUFFER_SIZE = 8;
@@ -14,15 +15,15 @@ class Api {
   /**
    * Create an Api object
    *
-   * @param {object} options {token<string>, [verbose<boolean>, timeout<number>,
+   * @param {object} options {[token<string>, verbose<boolean>, timeout<number>,
    * https<boolean>, urlCount<number>, bufferSize<number>, unit<function>]}
    */
-  constructor(options) {
+  constructor(options = {}) {
     if (!options) {
       throw new Error('You must define options in Api constructor');
     }
 
-    if (!options.token) {
+    if (options.token && typeof options.token !== 'string') {
       throw new Error('You must define app token');
     }
 
@@ -34,7 +35,7 @@ class Api {
       this.proxy = new HttpsProxyAgent(options.proxy);
     }
 
-    this.token = options.token;
+    this.token = options.token || null;
     this.verbose = options.verbose || false;
     this.timeout = options.timeout || DEFAULT_SPEEDTEST_TIMEOUT;
     this.https = options.https == null ? true : Boolean(options.https);
@@ -43,6 +44,23 @@ class Api {
     this.unit = options.unit || Api.UNITS.Bps;
   }
 
+  /**
+   * Create URL with correct protocol based on options
+   *
+   * @param {String} url
+   * @return {String}  The created url
+   */
+  createUrl(url = BASE_URL) {
+    if (/^https?:\/\//.test(url)) {
+      return url;
+    }
+
+    if (!/^\/\//.test(url)) {
+      url = `//${url}`
+    }
+
+    return `http${this.https ? 's' : ''}:${url}`;
+  }
 
   /**
    * Compute average from array of number
@@ -71,15 +89,18 @@ class Api {
   async get(options) {
     return new Promise((resolve, reject) => {
       const request = (this.https ? https : http).get(options, (response) => {
-        if (response.headers['content-type'].includes('json')) {
+        const ctype = response.headers['content-type'];
+        if (['json', 'javascript', 'text'].some(r => ctype.includes(r))) {
           response.setEncoding('utf8');
           let rawData = '';
           response.on('data', (chunk) => {
             rawData += chunk;
           });
           response.on('end', () => {
-            const parsedData = JSON.parse(rawData);
-            response.data = parsedData;
+            response.rawData = rawData;
+            if (ctype.includes('json')) {
+              response.data = JSON.parse(rawData);
+            }
             resolve({
               response,
               request,
@@ -105,10 +126,16 @@ class Api {
    * @return {Array<string>} List of videos url
    */
   async getTargets() {
+    if (!this.token) {
+      this.token = await this.getToken();
+      if (this.verbose) {
+        console.log(`API token: ${this.token}`);
+      }
+    }
     try {
       const targets = [];
       while (targets.length < this.urlCount) {
-        const target = `http${this.https ? 's' : ''}://api.fast.com/netflix/speedtest?https=${this.https ? 'true' : 'false'}&token=${this.token}&urlCount=${this.urlCount - targets.length}`;
+        const target = this.createUrl(`api.${BASE_URL}/netflix/speedtest?https=${this.https ? 'true' : 'false'}&token=${this.token}&urlCount=${this.urlCount - targets.length}`);
         const options = url.parse(target);
         if (this.proxy) options.agent = this.proxy;
         /* eslint-disable no-await-in-loop */
@@ -198,6 +225,33 @@ class Api {
       timer.start();
     });
   }
+
+  async getToken() {
+    const url = this.createUrl();
+
+    let rawData;
+    let script;
+    let token;
+    let m;
+
+    ({ response: { rawData } } = await this.get(url));
+    if ((m = /src=[\"'](?<script>[^"']app-.*\.js)[\"']/i.exec(rawData)) !== null) {
+      ({ groups: { script } } = m || { groups: { } });
+    }
+    if (!script) {
+      throw new ApiError({ code: ApiError.CODES.NO_TOKEN });
+    }
+
+    ({ response: { rawData } } = await this.get(`${url}/${script}`));
+    if ((m = /token:\s*[\"'](?<token>[^"']*)[\"']/i.exec(rawData)) !== null) {
+      ({ groups: { token } } = m || { groups: { } });
+    }
+    if (!token) {
+      throw new ApiError({ code: ApiError.CODES.NO_TOKEN });
+    }
+
+    return token;
+  }
 }
 
 Api.UNITS = {
@@ -212,5 +266,7 @@ Api.UNITS = {
   Mbps: rawSpeed => (rawSpeed * 8) / 1000000,
   Gbps: rawSpeed => (rawSpeed * 8) / 1000000000,
 };
+
+Api.BASE_URL = BASE_URL;
 
 module.exports = Api;
