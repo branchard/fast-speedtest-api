@@ -20,6 +20,7 @@ class ApiError extends Error {
 ApiError.CODES = {
   // CODE: Message
   BAD_TOKEN: 'Unknown app token',
+  NO_TOKEN: 'Unable to parse token',
   UNREACHABLE_HTTPS_API: 'Fast api is unreachable with https, try with http',
   UNREACHABLE_HTTP_API: 'Fast api is unreachable, check your network connection',
   PROXY_NOT_AUTHENTICATED: 'Failed to authenticate with provided proxy credentials',

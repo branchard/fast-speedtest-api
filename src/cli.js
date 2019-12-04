@@ -13,8 +13,13 @@ if (args.includes('-h') || args.includes('--help')) {
   process.exit(0);
 }
 
-const token = args[0];
-const restArgs = args.slice(1);
+let token;
+let restArgs = args;
+
+if (args[0] && !args[0].startsWith('-')) {
+  token = args[0];
+  restArgs = args.slice(1);
+}
 
 /* eslint-disable require-jsdoc */
 function getArgParam(argName, fullArgName) {
@@ -30,8 +35,8 @@ function getArgParam(argName, fullArgName) {
 
 /* eslint-enable require-jsdoc */
 
-if (!token || typeof token !== 'string') {
-  throw new Error('You must define an app token');
+if (token && typeof token !== 'string') {
+  throw new Error('App token must be string');
 }
 
 const verbose = restArgs.includes('-v') || restArgs.includes('--verbose');

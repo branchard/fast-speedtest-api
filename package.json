@@ -18,6 +18,9 @@
     "url": "git+https://github.com/branchard/fast-speedtest-api.git"
   },
   "author": "branchard",
+  "contributors": [
+    "honzahommer"
+  ],
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/branchard/fast-speedtest-api/issues"
