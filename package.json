@@ -1,8 +1,12 @@
 {
-  "name": "fast-speedtest-api",
+  "name": "@eskillzcorp/fast-speedtest-api",
   "version": "0.3.2",
-  "description": "A speed test powered by fast.com",
-  "main": "./src/Api.js",
+  "description": "A speed test powered by fast.com, written with TypeScript",
+  "main": "./dist/Api.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "types": "./dist/Api.d.ts",
   "engines": {
     "node": ">=7.10.1"
   },
@@ -11,7 +15,7 @@
     "release": "release-it"
   },
   "bin": {
-    "fast-speedtest": "./src/cli.js"
+    "fast-speedtest": "./dist/cli.js"
   },
   "repository": {
     "type": "git",
@@ -36,7 +40,8 @@
     "fast.com",
     "netflix",
     "api",
-    "cli"
+    "cli",
+    "eskillz"
   ],
   "devDependencies": {
     "@types/chai": "^4.2.11",

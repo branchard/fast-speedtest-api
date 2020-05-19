@@ -1,7 +1,7 @@
-import https from "https";
-import http from "http";
-import HttpsProxyAgent from "https-proxy-agent";
-import url from "url";
+const https = require("https");
+const http = require("http");
+const HttpsProxyAgent = require("https-proxy-agent");
+const url = require("url");
 import { Timer } from "./Timer";
 import { ApiError } from "./ApiError";
 
@@ -11,7 +11,7 @@ const DEFAULT_BUFFER_SIZE = 8;
 const MAX_CHECK_INTERVAL = 200; // ms
 
 export class Api {
-  proxy: HttpsProxyAgent;
+  proxy: any;
   token: any;
   verbose: any;
   timeout: any;
@@ -26,7 +26,7 @@ export class Api {
    * @param {object} options {token<string>, [verbose<boolean>, timeout<number>,
    * https<boolean>, urlCount<number>, bufferSize<number>, unit<function>]}
    */
-  constructor(options) {
+  constructor(options: any) {
     if (!options) {
       throw new Error("You must define options in Api constructor");
     }
@@ -59,13 +59,15 @@ export class Api {
    * @param {Array} arr array of number or null
    * @return {number} The average
    */
-  static average(arr) {
+  static average(arr: any) {
     // remove nulls from list
-    const arrWithoutNulls = arr.filter((e) => e);
+    const arrWithoutNulls = arr.filter((e: any) => e);
     if (arrWithoutNulls.length === 0) {
       return 0;
     }
-    return arrWithoutNulls.reduce((a, b) => a + b) / arrWithoutNulls.length;
+    return (
+      arrWithoutNulls.reduce((a: any, b: any) => a + b) / arrWithoutNulls.length
+    );
   }
 
   /**
@@ -75,14 +77,14 @@ export class Api {
    * @param {string} options The http/s get options to download from
    * @return {Promise} The request and response from the URL
    */
-  async get(options) {
+  async get(options: any) {
     return new Promise((resolve, reject) => {
       const request = (this.https ? https : http)
-        .get(options, (response) => {
+        .get(options, (response: any) => {
           if (response.headers["content-type"].includes("json")) {
             response.setEncoding("utf8");
             let rawData = "";
-            response.on("data", (chunk) => {
+            response.on("data", (chunk: any) => {
               rawData += chunk;
             });
             response.on("end", () => {
@@ -100,7 +102,7 @@ export class Api {
             });
           }
         })
-        .on("error", (e) => {
+        .on("error", (e: any) => {
           reject(e);
         });
     });
@@ -116,7 +118,7 @@ export class Api {
     try {
       const targets = [];
       while (targets.length < this.urlCount) {
-        const target = `http${
+        const target: any = `http${
           this.https ? "s" : ""
         }://api.fast.com/netflix/speedtest?https=${
           this.https ? "true" : "false"
@@ -168,16 +170,16 @@ export class Api {
     }
 
     let bytes = 0;
-    const requestList = [];
+    const requestList: any = [];
 
     const timer = new Timer(this.timeout, () => {
-      requestList.forEach((r) => r.abort());
+      requestList.forEach((r: any) => r.abort());
     });
 
     targets.forEach(async (target) => {
       const { response, request } = await (this.get(target) as any);
       requestList.push(request);
-      response.on("data", (data) => {
+      response.on("data", (data: any) => {
         bytes += data.length;
       });
       response.on("end", () => {
@@ -220,15 +222,15 @@ export class Api {
 
 Api.UNITS = {
   // rawSpeed is Bps
-  Bps: (rawSpeed) => rawSpeed,
-  KBps: (rawSpeed) => rawSpeed / 1000,
-  MBps: (rawSpeed) => rawSpeed / 1000000,
-  GBps: (rawSpeed) => rawSpeed / 1000000000,
+  Bps: (rawSpeed: number) => rawSpeed,
+  KBps: (rawSpeed: number) => rawSpeed / 1000,
+  MBps: (rawSpeed: number) => rawSpeed / 1000000,
+  GBps: (rawSpeed: number) => rawSpeed / 1000000000,
 
-  bps: (rawSpeed) => rawSpeed * 8,
-  Kbps: (rawSpeed) => (rawSpeed * 8) / 1000,
-  Mbps: (rawSpeed) => (rawSpeed * 8) / 1000000,
-  Gbps: (rawSpeed) => (rawSpeed * 8) / 1000000000,
+  bps: (rawSpeed: number) => rawSpeed * 8,
+  Kbps: (rawSpeed: number) => (rawSpeed * 8) / 1000,
+  Mbps: (rawSpeed: number) => (rawSpeed * 8) / 1000000,
+  Gbps: (rawSpeed: number) => (rawSpeed * 8) / 1000000000,
 };
 
 module.exports = Api;

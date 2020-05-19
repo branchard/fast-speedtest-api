@@ -59,8 +59,5 @@ typings/
 
 # IDEs related files
 .idea/
-dist/src/Api.js
-dist/src/ApiError.js
-dist/src/cli.js
-dist/src/Timer.js
-dist/test/test.js
+dist/*
+.nmprc
