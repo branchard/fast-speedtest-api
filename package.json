@@ -48,8 +48,6 @@
     "eslint-plugin-import": "^2.14.0",
     "mocha": "^5.2.0",
     "release-it": "^9.8.1",
-    "ts-mocha": "^7.0.0",
-    "ts-node": "^8.10.1",
     "typescript": "^3.9.2"
   },
   "dependencies": {
