@@ -8,7 +8,7 @@ const args = process.argv.slice(2);
 if (args.includes('-h') || args.includes('--help')) {
   console.log([
     'fast-speedtest - speed test powered by fast.com',
-    'usage: fast-speedtest token [-v, --verbose] [-r, --raw] [-n, --no-https] [-t, --timeout timeout] [-c, --count url-count] [-b, --buffer buffer-size] [-u, --unit output-unit]',
+    'usage: fast-speedtest token [-v, --verbose] [-r, --raw] [-n, --no-https] [-t, --timeout timeout] [-c, --count url-count] [-b, --buffer buffer-size] [-u, --unit output-unit] [-p, --proxy proxy]',
   ].join('\n'));
   process.exit(0);
 }
@@ -46,6 +46,7 @@ const timeout = getArgParam('-t', '--timeout');
 const urlCount = getArgParam('-c', '--count');
 const bufferSize = getArgParam('-b', '--buffer');
 const unitName = getArgParam('-u', '--unit');
+const proxy = getArgParam('-p', '--proxy');
 if (unitName && !(unitName in Api.UNITS)) {
   displayError(`Unit not valid, must be one of ${Object.keys(Api.UNITS)}`);
 }
@@ -59,6 +60,7 @@ const api = new Api({
   bufferSize,
   https,
   unit,
+  proxy,
 });
 
 api.getSpeed()

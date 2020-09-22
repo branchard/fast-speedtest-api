@@ -1,5 +1,7 @@
 const https = require('https');
 const http = require('http');
+const HttpsProxyAgent = require('https-proxy-agent');
+const url = require('url');
 const Timer = require('./Timer');
 const ApiError = require('./ApiError');
 
@@ -26,6 +28,10 @@ class Api {
 
     if (options.unit && typeof options.unit !== 'function') {
       throw new Error('Invalid unit');
+    }
+
+    if (options.proxy) {
+      this.proxy = new HttpsProxyAgent(options.proxy);
     }
 
     this.token = options.token;
@@ -69,12 +75,12 @@ class Api {
    * Get data from the specified URL
    *
    * @async
-   * @param {string} url The URL to download from
+   * @param {string} options The http/s get options to download from
    * @return {Promise} The request and response from the URL
    */
-  async get(url) {
+  async get(options) {
     return new Promise((resolve, reject) => {
-      const request = (this.https ? https : http).get(url, (response) => {
+      const request = (this.https ? https : http).get(options, (response) => {
         if (response.headers['content-type'].includes('json')) {
           response.setEncoding('utf8');
           let rawData = '';
@@ -112,13 +118,20 @@ class Api {
     try {
       const targets = [];
       while (targets.length < this.urlCount) {
+        const target = `http${this.https ? 's' : ''}://api.fast.com/netflix/speedtest?https=${this.https ? 'true' : 'false'}&token=${this.token}&urlCount=${this.urlCount - targets.length}`;
+        const options = url.parse(target);
+        if (this.proxy) options.agent = this.proxy;
         /* eslint-disable no-await-in-loop */
-        const { response } = await this.get(`http${this.https ? 's' : ''}://api.fast.com/netflix/speedtest?https=${this.https ? 'true' : 'false'}&token=${this.token}&urlCount=${this.urlCount - targets.length}`);
+        const { response } = await this.get(options);
         /* eslint-enable no-await-in-loop */
         if (response.statusCode !== 200) {
           if (response.statusCode === 403) {
             throw new ApiError({ code: ApiError.CODES.BAD_TOKEN });
           }
+          if (response.statusCode === 407) {
+            throw new ApiError({ code: ApiError.CODES.PROXY_NOT_AUTHENTICATED });
+          }
+          console.log(response.statusCode);
           throw new ApiError({ code: ApiError.CODES.UNKNOWN });
         }
         targets.push(...response.data);

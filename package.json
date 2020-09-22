@@ -44,5 +44,8 @@
     "eslint-plugin-import": "^2.14.0",
     "mocha": "^5.2.0",
     "release-it": "^9.8.1"
+  },
+  "dependencies": {
+    "https-proxy-agent": "^2.2.2"
   }
 }
