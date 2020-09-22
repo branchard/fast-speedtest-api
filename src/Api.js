@@ -108,7 +108,7 @@ class Api {
     try {
       const targets = [];
       while (targets.length < this.urlCount) {
-        const target = `http${this.https ? 's' : ''}://api.fast.com/netflix/speedtest?https=${this.https ? 'true' : 'false'}&token=${this.token}&urlCount=${this.urlCount - targets.length}`;
+        const target = `http${this.https ? 's' : ''}://api.fast.com/netflix/speedtest/v2?https=${this.https ? 'true' : 'false'}&token=${this.token}&urlCount=${this.urlCount - targets.length}`;
         const options = url.parse(target);
         if (this.proxy) options.agent = this.proxy;
         /* eslint-disable no-await-in-loop */
@@ -124,7 +124,7 @@ class Api {
           console.log(response.statusCode);
           throw new ApiError({ code: ApiError.CODES.UNKNOWN });
         }
-        targets.push(...response.data);
+        targets.push(...response.data.targets);
       }
       return targets.map(target => target.url);
     } catch (e) {
