@@ -43,7 +43,7 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "mocha": "^5.2.0",
-    "release-it": "^9.8.1"
+    "release-it": "^15.6.0"
   },
   "dependencies": {
     "https-proxy-agent": "^2.2.2"
